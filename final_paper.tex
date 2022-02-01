@@ -1,0 +1,374 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+% \usepackage{graphicx}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{float}
+% package for code
+\usepackage{caption}
+
+% table
+% for Talbe centering with fixed width
+\usepackage{array}
+\usepackage{threeparttable}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+\begin{sloppypar}
+
+\title{An Access Control System for Verifiable Credentials with Selective Disclosure\\
+{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
+should not be used}
+\thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Chun-An Lin}
+\IEEEauthorblockA{\textit{Graduate school of Natural} \\ \textit{Science \& Technology}  \\
+\textit{Kanazawa University}\\
+Kanazawa, Japan \\
+kimlin20011@gmail.com}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Chen-Mou Cheng}
+\IEEEauthorblockA{\textit{Graduate school of Natural} \\ \textit{Science \& Technology}  \\
+\textit{Kanazawa University}\\
+Kanazawa, Japan \\
+cheng@se.kanazawa-u.ac.jp}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Masahiro Mambo}
+\IEEEauthorblockA{\textit{Graduate school of Natural} \\ \textit{Science \& Technology}  \\
+\textit{Kanazawa University}\\
+Kanazawa, Japan \\
+mambo@ec.t.kanazawa-u.ac.jp}
+% \and
+% \IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
+% \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+% \textit{name of organization (of Aff.)}\\
+% City, Country \\
+% email address or ORCID}
+% \and
+% \IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
+% \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+% \textit{name of organization (of Aff.)}\\
+% City, Country \\
+% email address or ORCID}
+% \and
+% \IEEEauthorblockN{6\textsuperscript{th} Given Name Surname}
+% \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+% \textit{name of organization (of Aff.)}\\
+% City, Country \\
+% email address or ORCID}
+}
+
+\maketitle
+
+\begin{abstract}
+    It is important for access control mechanisms to consider both authentication and authorization components to enhance privacy and security. User-Managed Access (UMA) is an access control profile supporting (1) party-to-party sharing that allows the resource owner to authorize the resource to the third-party and (2) customization of access control policy which means resource owner can formulate the policy for accessing the protected resource. However, although the UMA profile defines the authorization process, it does not specify the detail part for authentication. To fill this gap, it is necessary to import digital credential technology to authenticate the third party. Therefore, this paper proposes VC-UMA, an access control mechanism integrating UMA with Verifiable Credentials (VC). VC is an open standard of decentralized credentials which often constructed on the blockchain that allowing user to fully control their credentials.  Besides, selective disclosure mechanism is integrated into VC-UMA to address the privacy concerns raised by sharing VCs. To prove the feasibility of the VC-UMA, the proof of concept is conducted. Specifically, a prototype system is implemented and the experiments of the performance is presented. 
+\end{abstract}
+
+\begin{IEEEkeywords}
+    User-Managed Access, Verifiable Credentials, Access Control, Selective Disclosure, Blockchain
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Access Control\cite{AccessControl1} is a mechanism responsible for managing the requests that want to access protected resources. Without proper access control mechanisms, internet services are prone to various privacy and security issues. For instance, invalid access to protected resources, or leakage of privacy data during the access control process.
+
+User-Managed Access (UMA)\cite{UMA} is a party-to-party right delegation profile extension for access control. In UMA, users can not only formulate the customized access control policy\cite{UMA_paper1} but also realize the \textit{Party-to-Party Sharing} scenario. Nevertheless, according to Sandhu\cite{AccessControl_principle}, secure access control requires several important components namely, \textit{Authorization}, \textit{Authentication},  \textit{Auditing}, etc. Especially, authorization and authentication play extremely important roles in the process of user access to the protected resources.
+However, UMA profile only defines the claim gathering concept for the authentication part which means the user needs to provide the claim to get authentication, but the trust model among all the entities is out of scope. For example, as a resource owner, the problem of \textit{how can I trust the third party to access the resources?} cannot be solved only by employing the UMA profile. 
+
+
+To solve the above problems, this paper adopts Self-Sovereign Identity (SSI), a promising concept that is regarded as the next generation of digital identity\cite{Path_to_Self_Sovereign}. This concept allows individuals fully control of their digital identities and credential. Among SSI, Verifiable Credential (VC)\cite{VC_model} is a  core technology that is the digital credential framework of following the SSI principle and specifies by the World Wide Web Consortium (W3C). VC utilizes digital signature technology often together with the blockchain which is a distributed ledger platform with decentralized, immutable, and traceable features. With the wide acceptance of VC, privacy has become an important issue. Regarding the privacy issue, W3C recommends developers follow the data minimization principle\cite{VC_Implementation_Guidelines} when designing VC services. This means that when presenting VCs, is it better to minimize the exposed data to prevent oversharing of the privacy credentials. 
+% \subsection{Research Objective}
+
+Based on the above observations, this paper aims to propose a Verifiable Credential-enabled User-Managed Access Mechanism 
+(VC-UMA) that overcomes the lack of trust authentication model defined in the UMA profile by introducing the advantages of the VC framework. Additionally, in order to reduce the risk of private data leakage when sharing VCs, this paper adopts the selective disclosure technology so that VC holder can redact the private part of data in VC to follow the data minimization principle.
+To summarize, this paper claims the following contribution.
+
+\begin{itemize}
+  \item \textbf{An access control mechanism based on decentralized credential scheme is presented.}	This paper proposes a new access control mechanism: VC-UMA based on the W3C's VC model\cite{VC_model} and the UMA Profile\cite{UMA}. Besides, the relationship and the trusted model among all entities in UMA and VC is reconsidered. Moreover, the guidelines for implementing VC-UMA are provided in static and dynamic ways.
+  \item \textbf{Selective disclosure method to achieve the data minimization principle for VC sharing is considered.} Considering the part of privacy-preserving VC sharing, we adopt the selective disclosure methods provided by W3C, a selective disclosure authentication flows is proposed.
+  \item \textbf{A use case of VC-UMA has been proposed and implemented as the prototype system as proof of concept.}
+  In order to prove the feasibility and usability of the proposed mechanism, the proof of concept research method is conducted. The implemented prototype system is presented. Furthermore, the performance of the system is analyzed.
+\end{itemize}
+
+% The rest of the paper is organized as follows. In Section \ref{sec:back}, the background and related work is organized; The proposed VC-UMA mechanism is discussed in Section \ref{sec:system_design}; Then, Implementation and experiments of prototype system based on the provided use case is presented in Section \ref{sec:Evaluation}. In Section \ref{sec:Conclusion}, the conclusion of this paper is summed up.
+
+\section{Background and Related Work}
+\label{sec:back}
+\subsection{User-Managed Access}
+
+
+UMA is an access control profile base on OAuth2\cite{OAuth2}, proposed by Kantara Initiative and published on Internet Engineering Task Force (IETF) \cite{UMA}. 
+OAuth2 is a  widely used third-party authorization protocol, but this protocol doesn't cover the party-to-party sharing scenarios.
+For instance, Alice wants to use the service of photo editing software (playing the role of resource access client), so she authorizes her photos (resource) stored in the third-party cloud service to the photo editing software. However, OAuth2 doesn't support Alice to grant Bob to access her photos on the third-party cloud service.
+UMA fills the gap of OAuth2 that doesn't define the party-to-party authorization scenario. 
+UMA profile is composed of several entities, the definitions of which are shown in table \ref{table:UMA_entities}.
+
+% According to the UMA Profile\cite{UMA}, the UMA process can be divided into three phases, namely \textit{Protecting a Resource}, \textit{Getting Authorization} and \textit{Accessing a Resource}. First, in the \textit{Protecting a Resource} phase, RO registers RS to AS. After registration, RS will obtain the Protection API Token (PAT) from the AS. After that, RO then registers the access policy of the protected resource to AS; the \textit{Getting Authorization} phase mainly refers to RqP requesting authorization from AS through Client. In this process, RqP is required to present the claims related to the access policy in order to get authenticate from AS. After passing the verification, Client will obtain the Requesting Party Token (RPT) from AS; Finally, in \textit{Accessing a Resource} phase, Client may reaccess the protected resource by sending the access request accompanied by the RPT to RS.
+
+\begin{table}[htbp]
+  \caption{Entities in User-Managed Access}
+  \label{table:UMA_entities}
+  \small
+  \scalebox{0.9}{
+  \begin{tabular}{>{\centering\arraybackslash}p{2.2cm} p{6cm}l}
+  \hline
+  UMA entities	& description \\ \hline\hline
+  Resource Owner (RO)	& The owner of the protected resource.\\ \hline
+  Requesting Party (RqP)	& The party who is attempting to access the protected resource.\\ \hline
+  Client	& A third-party application that proxy the RqP to access protected resources.\\ \hline
+  Resource Server (RS)	& The resource server stores protected resources and is capable of handling resource requests from client.\\ \hline
+  Authorization Server (AS)		& The Authorization server is delegated by the RO to protect resources stored in RS and authorizes resource requests issued by RqP.\\ \hline
+  \end{tabular}
+  }
+\end{table}
+
+
+\section{Prepare Your Paper Before Styling}
+Before you begin to format your paper, first write and save the content as a 
+separate text file. Complete all content and organizational editing before 
+formatting. Please note sections \ref{AA}--\ref{SCM} below for more information on 
+proofreading, spelling and grammar.
+
+Keep your text and graphic files separate until after the text has been 
+formatted and styled. Do not number text heads---{\LaTeX} will do that 
+for you.
+
+\subsection{Abbreviations and Acronyms}\label{AA}
+Define abbreviations and acronyms the first time they are used in the text, 
+even after they have been defined in the abstract. Abbreviations such as 
+IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use 
+abbreviations in the title or heads unless they are unavoidable.
+
+\subsection{Units}
+\begin{itemize}
+\item Use either SI (MKS) or CGS as primary units. (SI units are encouraged.) English units may be used as secondary units (in parentheses). An exception would be the use of English units as identifiers in trade, such as ``3.5-inch disk drive''.
+\item Avoid combining SI and CGS units, such as current in amperes and magnetic field in oersteds. This often leads to confusion because equations do not balance dimensionally. If you must use mixed units, clearly state the units for each quantity that you use in an equation.
+\item Do not mix complete spellings and abbreviations of units: ``Wb/m\textsuperscript{2}'' or ``webers per square meter'', not ``webers/m\textsuperscript{2}''. Spell out units when they appear in text: ``. . . a few henries'', not ``. . . a few H''.
+\item Use a zero before decimal points: ``0.25'', not ``.25''. Use ``cm\textsuperscript{3}'', not ``cc''.)
+\end{itemize}
+
+\subsection{Equations}
+Number equations consecutively. To make your 
+equations more compact, you may use the solidus (~/~), the exp function, or 
+appropriate exponents. Italicize Roman symbols for quantities and variables, 
+but not Greek symbols. Use a long dash rather than a hyphen for a minus 
+sign. Punctuate equations with commas or periods when they are part of a 
+sentence, as in:
+\begin{equation}
+a+b=\gamma\label{eq}
+\end{equation}
+
+Be sure that the 
+symbols in your equation have been defined before or immediately following 
+the equation. Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
+the beginning of a sentence: ``Equation \eqref{eq} is . . .''
+
+\subsection{\LaTeX-Specific Advice}
+
+Please use ``soft'' (e.g., \verb|\eqref{Eq}|) cross references instead
+of ``hard'' references (e.g., \verb|(1)|). That will make it possible
+to combine sections, add equations, or change the order of figures or
+citations without having to go through the file line by line.
+
+Please don't use the \verb|{eqnarray}| equation environment. Use
+\verb|{align}| or \verb|{IEEEeqnarray}| instead. The \verb|{eqnarray}|
+environment leaves unsightly spaces around relation symbols.
+
+Please note that the \verb|{subequations}| environment in {\LaTeX}
+will increment the main equation counter even when there are no
+equation numbers displayed. If you forget that, you might write an
+article in which the equation numbers skip from (17) to (20), causing
+the copy editors to wonder if you've discovered a new method of
+counting.
+
+{\BibTeX} does not work by magic. It doesn't get the bibliographic
+data from thin air but from .bib files. If you use {\BibTeX} to produce a
+bibliography you must send the .bib files. 
+
+{\LaTeX} can't read your mind. If you assign the same label to a
+subsubsection and a table, you might find that Table I has been cross
+referenced as Table IV-B3. 
+
+{\LaTeX} does not have precognitive abilities. If you put a
+\verb|\label| command before the command that updates the counter it's
+supposed to be using, the label will pick up the last counter to be
+cross referenced instead. In particular, a \verb|\label| command
+should not go before the caption of a figure or a table.
+
+Do not use \verb|\nonumber| inside the \verb|{array}| environment. It
+will not stop equation numbers inside \verb|{array}| (there won't be
+any anyway) and it might stop a wanted equation number in the
+surrounding equation.
+
+\subsection{Some Common Mistakes}\label{SCM}
+\begin{itemize}
+\item The word ``data'' is plural, not singular.
+\item The subscript for the permeability of vacuum $\mu_{0}$, and other common scientific constants, is zero with subscript formatting, not a lowercase letter ``o''.
+\item In American English, commas, semicolons, periods, question and exclamation marks are located within quotation marks only when a complete thought or name is cited, such as a title or full quotation. When quotation marks are used, instead of a bold or italic typeface, to highlight a word or phrase, punctuation should appear outside of the quotation marks. A parenthetical phrase or statement at the end of a sentence is punctuated outside of the closing parenthesis (like this). (A parenthetical sentence is punctuated within the parentheses.)
+\item A graph within a graph is an ``inset'', not an ``insert''. The word alternatively is preferred to the word ``alternately'' (unless you really mean something that alternates).
+\item Do not use the word ``essentially'' to mean ``approximately'' or ``effectively''.
+\item In your paper title, if the words ``that uses'' can accurately replace the word ``using'', capitalize the ``u''; if not, keep using lower-cased.
+\item Be aware of the different meanings of the homophones ``affect'' and ``effect'', ``complement'' and ``compliment'', ``discreet'' and ``discrete'', ``principal'' and ``principle''.
+\item Do not confuse ``imply'' and ``infer''.
+\item The prefix ``non'' is not a word; it should be joined to the word it modifies, usually without a hyphen.
+\item There is no period after the ``et'' in the Latin abbreviation ``et al.''.
+\item The abbreviation ``i.e.'' means ``that is'', and the abbreviation ``e.g.'' means ``for example''.
+\end{itemize}
+An excellent style manual for science writers is \cite{b7}.
+
+\subsection{Authors and Affiliations}
+\textbf{The class file is designed for, but not limited to, six authors.} A 
+minimum of one author is required for all conference articles. Author names 
+should be listed starting from left to right and then moving down to the 
+next line. This is the author sequence that will be used in future citations 
+and by indexing services. Names should not be listed in columns nor group by 
+affiliation. Please keep your affiliations as succinct as possible (for 
+example, do not differentiate among departments of the same organization).
+
+\subsection{Identify the Headings}
+Headings, or heads, are organizational devices that guide the reader through 
+your paper. There are two types: component heads and text heads.
+
+Component heads identify the different components of your paper and are not 
+topically subordinate to each other. Examples include Acknowledgments and 
+References and, for these, the correct style to use is ``Heading 5''. Use 
+``figure caption'' for your Figure captions, and ``table head'' for your 
+table title. Run-in heads, such as ``Abstract'', will require you to apply a 
+style (in this case, italic) in addition to the style provided by the drop 
+down menu to differentiate the head from the text.
+
+Text heads organize the topics on a relational, hierarchical basis. For 
+example, the paper title is the primary text head because all subsequent 
+material relates and elaborates on this one topic. If there are two or more 
+sub-topics, the next level head (uppercase Roman numerals) should be used 
+and, conversely, if there are not at least two sub-topics, then no subheads 
+should be introduced.
+
+\subsection{Figures and Tables}
+\paragraph{Positioning Figures and Tables} Place figures and tables at the top and 
+bottom of columns. Avoid placing them in the middle of columns. Large 
+figures and tables may span across both columns. Figure captions should be 
+below the figures; table heads should appear above the tables. Insert 
+figures and tables after they are cited in the text. Use the abbreviation 
+``Fig.~\ref{fig}'', even at the beginning of a sentence.
+
+\begin{table}[htbp]
+\caption{Table Type Styles}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
+\cline{2-4} 
+\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
+\hline
+copy& More table copy$^{\mathrm{a}}$& &  \\
+\hline
+\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
+\end{tabular}
+\label{tab1}
+\end{center}
+\end{table}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics{fig1.png}}
+\caption{Example of a figure caption.}
+\label{fig}
+\end{figure}
+
+Figure Labels: Use 8 point Times New Roman for Figure labels. Use words 
+rather than symbols or abbreviations when writing Figure axis labels to 
+avoid confusing the reader. As an example, write the quantity 
+``Magnetization'', or ``Magnetization, M'', not just ``M''. If including 
+units in the label, present them within parentheses. Do not label axes only 
+with units. In the example, write ``Magnetization (A/m)'' or ``Magnetization 
+\{A[m(1)]\}'', not just ``A/m''. Do not label axes with a ratio of 
+quantities and units. For example, write ``Temperature (K)'', not 
+``Temperature/K''.
+
+\section*{Acknowledgment}
+
+The preferred spelling of the word ``acknowledgment'' in America is without 
+an ``e'' after the ``g''. Avoid the stilted expression ``one of us (R. B. 
+G.) thanks $\ldots$''. Instead, try ``R. B. G. thanks$\ldots$''. Put sponsor 
+acknowledgments in the unnumbered footnote on the first page.
+
+\section*{References}
+
+
+\begin{thebibliography}{00}
+    \bibitem{AccessControl1}
+    P. Samarati and S. C. de Vimercati, ``Access control: Policies, models, and mechanisms,'' {\em in International School on Foundations of Security Analysis and Design}, pp. 137–196, 2000.
+  
+    \bibitem{UMA}
+    E. Maler, M. Machulak, J. Richer, and T. Hardjono, ``User-Managed Access (UMA) 2.0 Grant for OAuth 2.0 Authorization,'' {\em Internet Engineering Task Force}, https://datatracker.ietf.org/doc/draft-maler-oauth-umagrant (accessed Oct. 06, 2021).
+  
+    \bibitem{UMA_paper1}
+    M. P. Machulak, E. L. Maler, D. Catalano, and A. Van Moorsel, ``User-managed access to web resources,'' {\em in Proceedings of the 6th ACM workshop on Digital identity management}, pp. 35–44, 2010.
+  
+    \bibitem{AccessControl_principle}
+    R. S. Sandhu and P. Samarati, ``Access control: principle and practice,'' {\em IEEE Commun. Mag.}, vol. 32, no. 9, pp. 40–48, 1994.
+  
+    \bibitem{Path_to_Self_Sovereign}
+    C. Allen, ``The Path to Self-Sovereign Identity,'' http://www.lifewithalacrity.com/2016/04/the-path-to-self-soverereign-identity.html (accessed Nov. 17, 2021).
+  
+    \bibitem{VC_model}
+    World Wide Web Consortium, ``Verifiable Credentials Data Model v1.1,'' https://www.w3.org/TR/vc-data-model/ (accessed Nov. 22, 2021).
+  
+    \bibitem{VC_Implementation_Guidelines}
+    D. Chadwick, D. Longley, M. Sporny, O. Terbu, and D. Zagidulin, ``Verifiable Credentials Implementation Guidelines 1.0,'' W3C Work. Group Note Sep, 2019.
+  
+    \bibitem{ssi}
+    A. Preukschat and D. Reed, ``Self-sovereign identity,'' {\em Manning Publications}, 2021.
+  
+    \bibitem{OAuth2}
+    D. Hardt et al., ``The OAuth 2.0 authorization framework,'' RFC 6749, October, 2012.
+  
+    \bibitem{bitcoin}
+    S. Nakamoto, ``Bitcoin: A peer-to-peer electronic cash system,'' {\em IEEE Decentralized Bus. Rev.}, p. 21260, 2008.
+  
+    \bibitem{blockchain_smart_contract}
+    X. Xu et al., ``A taxonomy of blockchain-based systems for architecture design,'' {\em in 2017 IEEE international conference on software architecture (ICSA)}, pp. 243–252, 2017.
+  
+    \bibitem{ethereum}
+    V. Buterin, ``A next-generation smart contract and decentralized application platform,'' {\em in White Pap.}, vol. 3, no. 37, 2014.
+  
+    \bibitem{cl_sig}
+    J. Camenisch and A. Lysyanskaya, ``Signature schemes and anonymous credentials from bilinear maps,'' {\em in Annual international cryptology conference}, pp. 56–72, 2004.
+  
+    \bibitem{bbs_1}
+    D. Boneh, X. Boyen, and H. Shacham, ``Short group signatures,'' {\em in Annual international cryptology conference}, pp. 41–55, 2004.
+  
+    \bibitem{bbs_cl}
+    W.Shih, ``Comparing CL Signatures with BBS+ Signatures,'' https://gist.github.com/wayne-shih/46c3d57608d9dcf8e6722d86084e710c (accessed Nov. 18, 2021).
+  
+    \bibitem{Selective_Disclosure_paper}
+    R. Mukta et al., ``Blockchain-based Verifiable Credential Sharing with Selective Disclosure,'' {\em in 2020 IEEE 19th International Conference on Trust, Security and Privacy in Computing and Communications (TrustCom)}, pp. 959–966, 2020.
+  
+    \bibitem{redactable_signature}
+    R. Johnson et al., ``Homomorphic signature schemes,'' {\em in Cryptographers’ track at the RSA conference}, pp. 244–262, 2002.
+  
+    \bibitem{CanDID}
+    D. Maram et al., ``CanDID: Can-do decentralized identity with legacy compatibility, Sybil-resistance, and accountability,'' {\em in 2021 IEEE Symposium on Security and Privacy (SP)}, pp. 1348–1366, 2021.
+  
+    \bibitem{VC_Oauth}
+    D. Lagutin et al., ``Enabling decentralised identifiers and verifiable credentials for constrained IoT devices using OAuth-based delegation,'' {\em in Proceedings of the Workshop on Decentralized IoT Systems and Security (DISS 2019), in Conjunction with the NDSS Symposium, San Diego, CA, USA}, vol. 24, 2019.
+  
+    \bibitem{geth}
+    Ethereum Foundation, ``Go Ethereum,'' https://geth.ethereum.org/ (accessed Nov. 08, 2021).
+  
+    \bibitem{bbsplus_github}
+    MATTR, ``A solution for privacy-preserving verifiable credentials,''  https://github.com/mattrglobal/bbs-signatures (accessed Nov. 16, 2021).
+\end{thebibliography}
+\vspace{12pt}
+\color{red}
+IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
+
+\end{sloppypar}
+\end{document}
