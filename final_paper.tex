@@ -141,7 +141,7 @@ Blockchain is regarded as the core technology underlying Bitcoin\cite{bitcoin}. 
 
 Decentralized identifiers (DID) is one of the important technologies of SSI. DID is a digital Identity framework build over decentralize infrastructure such as blockchain. In DID framework, user doesn't need to rely on the centralized identity service to create a personal digital identity. The composition of the DID is usually composed of a series of random numbers, for example, $DID:example:0x2e12sfhx...$. This shows that DID is a high degree of anonymity. On the other hand, since a user can possess multiple DID at the same time, user activities can be prevented from being correlated which leads to the improvement of privacy. Besides, In the DID scheme, each DID will be connected to a corresponding DID Document, which mainly contains the public verification keys and related verification data. Specifically, since the storage location of the DID and DID Document is usually recorded in Blockchain, the DID owner can easily use the public key in the DID Document to claim ownership.
 
-In many identity verification scenarios, \textit{Verifiable Properties} are required. For instance, Alice needs to prove that she is graduated from university.  To fill this gap, SSI also provides an important technology called \textit{Verifiable Credentials} (VC). VC includes three important roles shown in Figure \ref{fig:vc_framework}. \textit{Holder} is the entity that owns and controls VC; \textit{Issuer} is a trusted third party responsible for VC issuance; \textit{Verifier} is the entity that wants to verify the VC. VC Framework is built on top of the Verifiable Data Registry (VDR) and DID technology. VDR is generally implemented by blockchain in order to take benefit of blockchain decentralized features. Take the school issuing graduation certificate as an example. First, both the student (Holder) and the school (Issuer) need to register their unique DIDs to VDR in advance. After that, Issuer packs and signs the student's DID, claims, and related certificate information by DID to generate VC. After obtaining VC, Verifier can find the DID Document through the issuer's DID in the VDR to obtain the public key and then verify the signature in the VC.
+In many identity verification scenarios, \textit{Verifiable Properties} are required. For instance, Alice needs to prove that she is graduated from university.  To fill this gap, SSI also provides an important technology called \textit{Verifiable Credentials} (VC). VC includes three important roles shown in fig. \ref{fig:vc_framework}. \textit{Holder} is the entity that owns and controls VC; \textit{Issuer} is a trusted third party responsible for VC issuance; \textit{Verifier} is the entity that wants to verify the VC. VC Framework is built on top of the Verifiable Data Registry (VDR) and DID technology. VDR is generally implemented by blockchain in order to take benefit of blockchain decentralized features. Take the school issuing graduation certificate as an example. First, both the student (Holder) and the school (Issuer) need to register their unique DIDs to VDR in advance. After that, Issuer packs and signs the student's DID, claims, and related certificate information by DID to generate VC. After obtaining VC, Verifier can find the DID Document through the issuer's DID in the VDR to obtain the public key and then verify the signature in the VC.
 
 
 \begin{figure}[ht] %浮動式圖形htbp
@@ -198,7 +198,7 @@ While designing the overall system, we also commit to achieving the following go
 
 \subsection{System Architecture}
 
-As shown in Figure \ref{fig:system_architecture}, the access control mechanism is divided into the UMA domain and VC domain. Among them, the UMA domain is responsible for handling the authorization management of protected resources and the verification of the requesting party (RqP);
+As shown in fig. \ref{fig:system_architecture}, the access control mechanism is divided into the UMA domain and VC domain. Among them, the UMA domain is responsible for handling the authorization management of protected resources and the verification of the requesting party (RqP);
 The VC domain defines the process for RqP to obtain VC. Besides, we assume that RO, RS, and RqP already own DID which corresponds to the private key, public key, and DID Document registered to the Verifiable Data Registry (VDR). In addition, anyone can directly obtain the DID Document corresponding to the DID through VDR.
 
 
@@ -227,8 +227,8 @@ Considering the difference between \textit{Selective Disclosure Signatures} flow
   In order to protect the privacy of claims in VC, VC issuer separates $n$ claims and then issue $n$ VCs, denoted as $\{VC_n\}$,  which one VC only include one claims. In this research, the set of $\{VC_n\}$ is defined as $VC\_Set$.
 \end{itemize}
 
-The design of VC Registry Contract for Selective Disclosure Signatures Flow refer to Figure \ref{fig:VC_Registry_API_sd_flow}.  It mainly includes \textit{register} and \textit{revoke} API for VC issuer to register and revoke VC, while \textit{isRevoked} API provides verifier to query the status whether a VC has been revoked or not;
-The design of VC Registry Contract API for Atomize Information flow shown in Figure \ref{fig:VC_Registry_API_ai_flow}. After generating $VC\_Set$, VC issuer assigns a $VC\_Set\_id$ for $VC\_Set$, and then register $VC\_Set$ and $\{VC_n\}$ to the smart contract by invoking $register\_set$ and $register\_VC$ API respectively. 
+The design of VC Registry Contract for Selective Disclosure Signatures Flow refer to fig. \ref{fig:VC_Registry_API_sd_flow}.  It mainly includes \textit{register} and \textit{revoke} API for VC issuer to register and revoke VC, while \textit{isRevoked} API provides verifier to query the status whether a VC has been revoked or not;
+The design of VC Registry Contract API for Atomize Information flow shown in fig. \ref{fig:VC_Registry_API_ai_flow}. After generating $VC\_Set$, VC issuer assigns a $VC\_Set\_id$ for $VC\_Set$, and then register $VC\_Set$ and $\{VC_n\}$ to the smart contract by invoking $register\_set$ and $register\_VC$ API respectively. 
 Issuer can also revoke the $VC\_Set$ through the revoke API, and verifier can check the revocation status of the $VC\_Set$ by querying \textit{isRevoked} API.
 
 \begin{figure}[htbp]
@@ -316,7 +316,7 @@ According to the UMA Profile\cite{UMA}, the VC-UMA mechanism process can be divi
 
 \subsubsection{Protecting a Resource Phase}
 
-First, in the Protecting a Resources phase (Figure \ref{fig:ProtectResource}), RO needs to apply for registration for RS from AS.
+First, in the Protecting a Resources phase (fig. \ref{fig:ProtectResource}), RO needs to apply for registration for RS from AS.
 At the same time, RO needs to provide resource DID, resource name, and PAT which prove that the registration is issued by the RO. 
 After receiving the registration request sent by RS, AS verifies the existence of the resource DID and verifies the integrity of the DID Document through DID Registry. If the resource DID is verified, the AS will return a unique resource ID to the RS.
 
@@ -333,7 +333,7 @@ Among them, \textit{policySchema} provides the format for RqP to generate the Ve
 
 
 \subsubsection{Getting Authorization Phase}
-According to the UMA Profile, the Getting Authorization phase is divided into two steps. The first step is that RqP requests resource from RS through Client (Figure \ref{fig:GetAuthorization_Permission_Endpoint}). Since Client's request has not been authorized yet, so RS will directly apply for request permission from the Permission Endpoint of AS. After that, AS will return $permission Ticket$, $policySchema$, $as\_uri$ to Client.
+According to the UMA Profile, the Getting Authorization phase is divided into two steps. The first step is that RqP requests resource from RS through Client (fig. \ref{fig:GetAuthorization_Permission_Endpoint}). Since Client's request has not been authorized yet, so RS will directly apply for request permission from the Permission Endpoint of AS. After that, AS will return $permission Ticket$, $policySchema$, $as\_uri$ to Client.
 
 \begin{figure}[htbp] %浮動式圖形
   \begin{center} %中央寄せ
@@ -343,11 +343,19 @@ According to the UMA Profile, the Getting Authorization phase is divided into tw
   \end{center}
 \end{figure}
 
-The second step of the \textit{Getting Authorization} phase is that the Client requests an RPT from the Token Endpoint in AS by providing a VP (Figure \ref{fig:GetAuthorization_Token_Endpoint}). This step is divided into two stages: \textit{Deriving Verifiable Presentation} and \textit{Releasing RPT}.
+The second step of the \textit{Getting Authorization} phase is that the Client requests an RPT from the Token Endpoint in AS by providing a VP (fig. \ref{fig:GetAuthorization_Token_Endpoint}). This step is divided into two stages: \textit{Deriving Verifiable Presentation} and \textit{Releasing RPT}.
 
-In the \textit{Deriving Verifiable Presentation} Stage, the Client alerts RqP that it requires using VC wallet for identity verification. Specifically, RqP can use VC wallet to obtain credential requests (in practice, it is common to use QR code). After accepting the credential request,  VC wallet can alert RqP of the claims that need to be presented according to \textit{policySchema} accompanied by the request.
-Then, RqP can choose $k$ claims that it wants to share to the AS  among the VCs with $i$ claims, which can be expressed as $CS_k = \{claim_k\}$. 
-After that, VC wallet derives proof from VC by \textit{BBS+ Signature Proof Generation} method. Derived proof can be expressed as $\pi = BBS+ ProofGen(pk_{issuer}, CS_{i-k}, CS_k, \sigma)$. Then VC wallet can use the derived proof to generate derived VC, expressed as $VC_{derived} = \{ctx, CS_k, \pi\}$. Finally, VC wallet package the derived VC into VP and send back to AS. VP can be expressed as $VP=\{ctx, VC_{derived}, \pi\}$.
+In the \textit{Deriving Verifiable Presentation} Stage, the Client alerts RqP that it requires using VC wallet for identity verification. Specifically, RqP can use VC wallet to obtain credential requests (in practice, it is common to use QR code). 
+In addition, according to Selective Disclosure Flow and Atomize Information Flow, there are two separated ways of VP derivation as follows. 
+
+\begin{itemize}
+  \item \textbf{Selective Disclosure Signatures Flow}\\
+  After accepting the credential request,  VC wallet can alert RqP of the claims that need to be presented according to \textit{policySchema} accompanied by the request.
+  Then, RqP can choose $k$ claims that it wants to share to the AS  among the VCs with $i$ claims, which can be expressed as $CS_k = \{claim_k\}$. 
+  After that, VC wallet derives proof from VC by \textit{BBS+ Signature Proof Generation} method. Derived proof can be expressed as $\pi = BBS+ ProofGen(pk_{issuer}, CS_{i-k}, CS_k, \sigma)$. Then VC wallet can use the derived proof to generate derived VC, expressed as $VC_{derived} = \{ctx, CS_k, \pi\}$. Finally, VC wallet package the derived VC into VP and send back to AS. VP can be expressed as $VP=\{ctx, VC_{derived}, \pi\}$.
+  \item \textbf{Atomize Information Flow} \\
+  In the Deriving Verifiable Presentation Stage of the Atomize Information Flow, since RqP receives $VC\_SET$ from the VC issuer, which each VC has only included one claim, RqP can select the required $k$ VCs in the $VC\_SET$, expressed as $VC\_SET_k=\{VC_k\}$.
+\end{itemize}
 
 \begin{figure}[htbp] %浮動式圖形
   \begin{center} %中央寄せ
@@ -369,8 +377,8 @@ Then, AS returns the verification result (token introspection object) back to th
 This section illustrates the feasibility of the VC-UMA by proof of concept. The prototype system is introduced. In addition, the experiments and the analyzation of prototype system is reported.
 
 \subsection{Feasibility}
-
-The prototype system is divided into \textit{VC Setup Side} and \textit{Access Control Side}. \textit{VC Setup Side} includes VC issuer, which mainly implements VC domain execution flow; \textit{Access Control Side} includes Alice's (requesting party) device, resources, and authorization server owned by Bob (Resource Owner), mainly implement the UMA domain execution flow. In order to communicate with smart contracts, VC issuer, authorization server, and Alice's device are required to deploy blockchain node.
+The prototype system is constructed based on the selective disclosure signatures flow of \textit{VC-UMA}.
+It is divided into \textit{VC Setup Side} and \textit{Access Control Side}. \textit{VC Setup Side} includes VC issuer, which mainly implements VC domain execution flow; \textit{Access Control Side} includes Alice's (requesting party) device, resources, and authorization server owned by Bob (Resource Owner), mainly implement the UMA domain execution flow. In order to communicate with smart contracts, VC issuer, authorization server, and Alice's device are required to deploy blockchain node.
 
 The backend of the prototype system is developed in TypeScript language. Furthermore, Node.js is used as the execution environment and Docker's MySQL image is deployed as the database. 
 The Koa2 is adopted as a backend framework to encapsulate the system service modules through the RESTful API. Frontend or other applications can invoke related services through the RESTful API provided by Koa2. 
@@ -380,14 +388,14 @@ On the other hand, Alice's device, authorization server, resources, and VC issue
 To meet the needs of signature and derive proof for VC, the BBS+ Signature Module\cite{bbsplus_github} provided by MATTR is used, which is designed based on the pairing-friendly curve, \textit{BLS12-381}.
 BBS+ Signature module not only provides VC issuer to implement multi-message VC signature but also provides VC wallet to realize the selective disclosure for deriving VC proofs. 
 
-According to the prototype, the operation flow for each entity is listed as follows. First, Alice can provide claim data to the VC issuer to apply for the VC(Figure \ref{fig:applyvc_selectclaim}a). 
+According to the prototype, the operation flow for each entity is listed as follows. First, Alice can provide claim data to the VC issuer to apply for the VC(fig. \ref{fig:applyvc_selectclaim}a). 
 After that, the VC issuer can generate VC by signing the received data and then return it to Alice;
 As the resource owner, Bob can register resources to be rented into the backend database of AS. Then, Bob can customize the access policy for resources by generating the \textit{policySchema} so that AS can conduct the access control process based on the defined policy;
 After finishing the above setup process, Alice can start the flow to request the protected resource.
 
 First, Alice can access the protected resource web page\ref{fig:access_resource} and push the button of the resource she wants to access. Then the page will output the file of \textit{policySchema}. After that, Alice can use her VC wallet to receive the \textit{policySchema}. 
 After receiving the \textit{policySchema}, Alice's VC wallet will redirect Alice to the page to select the reveal credential attributes. 
-Here, Alice can select the VCs or claims she wants to present (Figure \ref{fig:applyvc_selectclaim}b). After Alice confirms, VC wallet will derive \textit{Derived Proof} and package it into VP.
+Here, Alice can select the VCs or claims she wants to present (fig. \ref{fig:applyvc_selectclaim}b). After Alice confirms, VC wallet will derive \textit{Derived Proof} and package it into VP.
 Finally, the permission ticket and the VP are sent to the token endpoint of AS. When the AS verified the metadata sent by VC wallet, Alice can be authorized to access the resource.
 
 \begin{figure}[htbp] %浮動式圖形
@@ -407,31 +415,71 @@ Finally, the permission ticket and the VP are sent to the token endpoint of AS. 
 \end{figure}
 
 \subsection{Experiments}
-To evaluate the feasibility of the authentication flow in the prototype system for a specific implement scenario, the verification time of the VP verification for AS will be an important indicator, which will greatly affect the overall time for the VC-UMA authorization process.
-Besides, the data size of VP is also one of the important indicators. If the data size of VP is too large, the authentication process may be not suitable for devices with limited network bandwidth or storage to implement. 
-Table \ref{table:experimentsData} shows the result of experiments of the verification time and data size of VP as the number of reveal claims increases (we defined the VP originally including 50 claims).
 
-According to the results, it can be observed that the verification time and data size doesn't significantly increase as the increase of $n$.
-This inferred that using the BBS+ Signature to implement the selective disclosure method is a proper way since the cost of time and storage won't increase if we need to reveal more claims in VP.
+In order to help developers evaluate the appropriate authentication flow and the performance of using blockchain when applying the \textit{VC-UMA}, this paper presents three different experiments listed in Table \ref{table:experiments_list}.
 
-\begin{table}[htbp]
+\begin{table}[ht]
   \begin{center}
-  \caption{Experimental results for Verifiable Presentation Verification Time and Data Size}
-  \label{table:experimentsData}
+  \caption{Experiments for VC-UMA}
+  \label{table:experiments_list}
   % \begin{tabular}{c|p{28em}l}
-  % \resizebox{\textwidth}{7cm}{
-    % \scriptsize 
-  \small
-  \scalebox{0.9}{
-  \begin{tabular}{p{1.4cm} cccccc}
+  % \resizebox{\textwidth}{!}{
+  \begin{tabular}{p{3cm} p{5cm}l}
   \hline
-  Number of Reveal Claims	& 1 & 10 & 20 & 30 & 40 & 50 \\ \hline\hline
-  Verifiable Time (ms)	& 110.4 & 110.8 & 110.6 & 114 & 110.4 & 111.6\\ \hline
-  Data Size (byte) 	& 3638 & 3452 & 3268 & 3080 & 2892 & 2708 \\ \hline
+  Experiment name	& Description \\ \hline\hline
+  Verification Time for Verifiable Presentation	& The response time for verifying the verifiable presentation which reveal n claims (n = 1, 10, 20, 30, 40, 50) \\ \hline
+  Response Time of Invoking VC Registry API & The response time of invoking the API of VC Registry Contract\\ \hline
+  Gas Cost of Invoking VC Registry API	& The gas cost of invoking the API of VC Registry Contract\\ \hline
   \end{tabular}
-  }
+  % }
   \end{center}
+
 \end{table}
+
+\subsubsection{Verification Time for Verifiable Presentation}
+According to the results (fig. \ref{fig:new_verification_time}), it can be found that although \textit{Selective Disclosure Signatures} flow takes more time to verify $VP_{SD}$ with $n = 1$, the overall response time does not significantly increase as the increase of $n$. Besides, the verification time of \textit{Atomize Information} flow will increase significantly with the increase of the number of $VP_{AI}$. Therefore, it can be inferred that \textit{Atomize Information} flow can be used when only a few claims need to be verified, and \textit{Selective Disclosure Signatures} flow is more appropriate in cases where VP included many numbers of claims.
+
+\begin{figure}[ht] %浮動式圖形
+  \begin{center} %中央寄せ
+  \includegraphics[width=85mm]{images/new_verification_time.png} %[サイズ]{ファイル名.png}
+  \caption{Verifiable Presentation Response Time for Each Authentication flow} %キャプション
+  \label{fig:new_verification_time} %ラベル名label
+  \end{center}
+\end{figure}
+
+\subsubsection{Response Time of Invoking VC Registry API}
+
+As the experimental results, it can be observed that since the \textit{deploy contract}, \textit{register}, and \textit{revoke} API need to wait for the new block to be mined, a considerable time is taken. On the contrary, since \textit{isRevoked} API, does not need to change the block state, so the response time is relatively fast.
+
+	\begin{table}[ht]
+		\begin{center}
+		\caption{The Response Time of Invoking VC Registry API}
+		\label{table:VC_contract_Response_Time}
+		% \begin{tabular}{c|p{28em}l}
+		% \resizebox{\textwidth}{!}{
+		\begin{tabular}{p{2cm} cccccc}
+		\hline
+		API Name & deploy contract & register & revoke & isRevoked \\ \hline\hline
+		Response Time(ms) & 4580.2 & 6461.6 & 5172.2 & 1.8 \\ \hline
+		Standard Deviation(ms) & 2732.86  & 1729.52  & 1809.99  & 0.84 \\ \hline
+		\end{tabular}
+		% }
+		\end{center}
+	\end{table}
+
+\subsubsection{Gas Cost of Invoking API in VC Registry}
+
+The result is as shown in fig. \ref{fig:vc_gas_consumption}. It can be found that most of the cost are consumed when deploying of the VC Registry Contract, while \textit{Register VC} and \textit{Revoke VC} API are the next. The \textit{isRevoked} API does not cost the gas since it does not need to modify the block status. 
+Developers can focus on reducing the amount of data size that needs to be stored on the blockchain when deploying and invoking the VC Registry contract to reduce the cost of gas.
+
+\begin{figure}[htbp] %浮動式圖形
+  \begin{center} %中央寄せ
+  \includegraphics[width=85mm]{images/exper_fig/vc_gas_consumption.png} %[サイズ]{ファイル名.png}
+  \caption{The Gas Consumption of Each VC Registry Contract's API} %キャプション
+  \label{fig:vc_gas_consumption} %ラベル名label
+  \end{center}
+\end{figure}
+
 
 \subsection{Analysis}
 
