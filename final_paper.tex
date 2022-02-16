@@ -483,6 +483,21 @@ Developers can focus on reducing the amount of data size that needs to be stored
 
 \subsection{Analysis}
 
+\subsubsection{Security}
+When deploying VC-UMA, some attacks may cause the system to face security risks. The following will analyze how VC-UMA can resist against related attacks.
+
+
+\begin{itemize}
+  \item \textbf{Spoofing Attack Resistance}\\
+  The adversary in spoofing attack can access the protected resources by disguising the identity of a legitimate user. 
+	According to the method proposed in this research, users need to hold a legal VC to pass the authentication of authorization sever. The trusted model of VC relies on the trusted VC issuer and underlying blockchain technology. As long as the VC issuer can be fully trusted, is it impossible for the adversary to pass the authentication by modifying the blockchain status or generating fake VCs.
+  \item \textbf{Man-in-the-middle Attack（MITM）Resistance} \\
+  In the process of authenticating the requesting party in VC-UMA, the adversary may intercept the data among transmission and insert malicious content to disrupt the authentication process of VC-UMA. To solve this problem, first, the \textit{HTTPs} protocol with \textit{resist MITM attack} feature should be leveraged to prevent the adversary from participating in the access control process;
+  Second, before presenting the VC, the requesting party must sign the VC in the VC Wallet. In this way, the authorization server can verify VC is signed by the DID owned by RqP;  at last, in UMA Profile, Authorization Access Token (AAT) is provided to bind the client and RqP. By providing AAT, malicious clients from impersonating the requesting party can be avoided.
+\end{itemize}
+
+\subsubsection{Comparison}
+
 Table \ref{table:Evaluation_table} lists the comprehensive comparison between the VC-UMA and other access control mechanisms. \textit{Party-to-Party Authorization} means if the access control mechanism allows resource owner to define party-to-party sharing  scenario;
 \textit{Decentralization} illustrates if the common implementation of access control system relies on centralized services for authentication component; \textit{Privacy-preserving Authentication Flow} indicates whether the user can fully control their credential in the access control process or not;
 In a nutshell, VC-UMA not only provides an access control mechanism enhancing security and privacy but also provides a more decentralized and more privacy-preserving solution for authentication component in access control compared with other traditional mechanisms. 
