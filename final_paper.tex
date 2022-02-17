@@ -96,8 +96,8 @@ To summarize, this paper claims the following contribution.
 
 \begin{itemize}
   \item \textbf{An access control mechanism based on decentralized credential scheme is presented.}	This paper proposes a new access control mechanism: VC-UMA based on the W3C's VC model\cite{VC_model} and the UMA Profile\cite{UMA}. Besides, the relationship and the trusted model among all entities in UMA and VC is reconsidered. Moreover, the guidelines for implementing VC-UMA are provided in static and dynamic ways.
-  \item \textbf{Selective disclosure method to achieve the data minimization principle for VC sharing is considered.} Considering the part of privacy-preserving VC sharing, we adopt the selective disclosure methods provided by W3C, a selective disclosure authentication flows is proposed.
-  \item \textbf{A use case of VC-UMA has been proposed and implemented as the prototype system as proof of concept.}
+  \item \textbf{Different selective disclosure methods to achieve the data minimization principle for VC sharing are considered.} Considering the part of privacy-preserving VC sharing, this research takes the flexibility of system design into account. Specifically, referred the selective disclosure methods provided by W3C\cite{VC_Implementation_Guidelines}, two authentication flows design for VC-UMA are proposed: Atomize Information flow and Selective Disclosure Signature flow. Additionally, performance and cost experiments are conducted for these proposed flows.
+  \item \textbf{The prototype system of VC-UMA has been implemented as a proof of concept.}
   In order to prove the feasibility and usability of the proposed mechanism, the proof of concept research method is conducted. The implemented prototype system is presented. Furthermore, the performance of the system is analyzed.
 \end{itemize}
 
@@ -144,7 +144,7 @@ Decentralized identifiers (DID) is one of the important technologies of SSI. DID
 In many identity verification scenarios, \textit{Verifiable Properties} are required. For instance, Alice needs to prove that she is graduated from university.  To fill this gap, SSI also provides an important technology called \textit{Verifiable Credentials} (VC). VC includes three important roles shown in fig. \ref{fig:vc_framework}. \textit{Holder} is the entity that owns and controls VC; \textit{Issuer} is a trusted third party responsible for VC issuance; \textit{Verifier} is the entity that wants to verify the VC. VC Framework is built on top of the Verifiable Data Registry (VDR) and DID technology. VDR is generally implemented by blockchain in order to take benefit of blockchain decentralized features. Take the school issuing graduation certificate as an example. First, both the student (Holder) and the school (Issuer) need to register their unique DIDs to VDR in advance. After that, Issuer packs and signs the student's DID, claims, and related certificate information by DID to generate VC. After obtaining VC, Verifier can find the DID Document through the issuer's DID in the VDR to obtain the public key and then verify the signature in the VC.
 
 
-\begin{figure}[ht] %浮動式圖形htbp
+\begin{figure}[htbp] %浮動式圖形htbp
   % \begin{center} %中央寄せ
   \centering  
   % \includegraphics[width=83mm]{images/vc_framework.png} %[サイズ]{ファイル名.png}
@@ -155,7 +155,13 @@ In many identity verification scenarios, \textit{Verifiable Properties} are requ
 \end{figure}
 
 
-As the VC technology is still in the development stage, there are still many problems to be solved. One of the potential problems is privacy violations.  For preventing privacy violations, the generally accepted best practice is data minimization. In order to achieve the data minimization principle, Selective disclosure techniques is recommended to be used in the issue or present stage of VC\cite{VC_model}.  {Selective disclosure signatures} are commonly realized by the zero-knowledge proof cryptography method in order to allow the VC holder to hide the private attributes in VC. There are some developing signature schemes that can be natively applied to selective disclosure signatures systems, such as Camenisch-Lysyanskaya (CL) signature\cite{cl_sig} and BBS+ signature\cite{bbs_1}. Compared with CL Signature, BBS+ signature can achieve considerable security through much shorter keys and signatures\cite{bbs_cl}. Therefore, this paper not only adopts BBS+ signature technology to support the signature scheme for VC but also apply to the zero-knowledge proof for selective disclosure signatures method. 
+As the VC technology is still in the development stage, there are still many problems to be solved. One of the potential problems is privacy violations. For instance, the user provides redundant private data to a third party, so that the third party can abuse the private data. For preventing privacy violations, the generally accepted best practice is data minimization\cite{VC_model}. In order to achieve the data minimization principle, Selective Disclosure techniques is recommended to be used in the issue or present stage of VC. W3C proposed three methods for selective disclosure, namely \textit{Atomic Credentials}, \textit{Hashed Values} and \textit{Selective Disclosure Signatures}\cite{VC_Implementation_Guidelines}. The following gives descriptions of these three methods.
+\begin{enumerate}
+  \item \textbf{Atomic Credentials}\\ The concept of \textit{Atomic Credentials} is that the issuer splits the standard credential into a credential that only consists of a single claim. Therefore, the holder can choose to provide the credential which represents the specific claim that needs to share with the verifier to ensure that redundant claims will not be leaked to the verifier.
+  \item \textbf{Hashed Values} \\The issuer issues VC that all claims are hashed through the hash function and then sent to the holder. 
+  Later, the holder can only expose the required claims in the Verifiable Presentation.
+  \item \textbf{Selective Disclosure Signatures}\\ {Selective Disclosure Signatures} are commonly realized by the zero-knowledge proof cryptography method in order to allow the VC holder to hide the private attributes in VC. There are some developing signature schemes that can be natively applied to selective disclosure signatures systems, such as Camenisch-Lysyanskaya (CL) signature\cite{cl_sig} and BBS+ signature\cite{bbs_1}. Compared with CL Signature, BBS+ signature can achieve considerable security through much shorter keys and signatures\cite{bbs_cl}. Therefore, this research not only utilized BBS+ signature technology to support the signature scheme for VC but also apply to the zero-knowledge proof for selective disclosure signatures method. 
+\end{enumerate}
 
 \subsection{Related Work}
 In recent years, there are many studies dedicated to utilizing SSI technology to improve privacy and security for access control mechanism. CredChain\cite{Selective_Disclosure_paper} provides an SSI platform that enables issuer and VC holder to create, share and verify credentials in a safe environment. In consideration of personal privacy issues, this paper also leverages redactable signature\cite{redactable_signature} method allowing users to hide the secret attribute in credential; CanDID\cite{CanDID} is a user-friendly decentralized identity platform that is committed to achieving Sybil-resistance, accountability, key recovery, and other goals in a privacy-preserving way; Lagutin et al.\cite{VC_Oauth} proposed a DID and VC enabled OAuth-based delegation network. They attempt to establish an OAuth-based access control framework through the introduction of DID and VC technology to solve the problem of OAuth2 which does not cover the authentication profile.  However, this study only made a preliminary process design for the framework but didn't consider the privacy issue of VC as well as the party-to-party sharing issue often encountered in IoT scenarios.
@@ -168,7 +174,7 @@ To overcome the issues mention in advance, this paper is committed to designing 
 In order to overcome the aforementioned issues, this paper is dedicated to designing a \textit{Privacy-Preserving Verifiable Credential-enabled User-Managed Access} Mechanism, and named it VC-UMA. VC-UMA is a user-centralize access control mechanism, which contains two subdomains, namely VC domain and UMA domain. UMA domain refers to UMA Profile\cite{UMA}; The VC domain refers to the decentralized identity technology in SSI, such as DID and VC. Besides, the notation used in this paper are listed in Table \ref{table:notation}. 
 While designing the overall system, we also commit to achieving the following goals.
 
-\begin{table}[ht]
+\begin{table}[htbp]
   \begin{center}
   \caption{Notation}
   \label{table:notation}
@@ -258,7 +264,7 @@ Issuer can also revoke the $VC\_Set$ through the revoke API, and verifier can ch
   \label{fig:VC_Registry_API_sd_flow}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
   \begin{center}
   \begin{varwidth}{8.5cm}
@@ -383,9 +389,7 @@ It is divided into \textit{VC Setup Side} and \textit{Access Control Side}. \tex
 The backend of the prototype system is developed in TypeScript language. Furthermore, Node.js is used as the execution environment and Docker's MySQL image is deployed as the database. 
 The Koa2 is adopted as a backend framework to encapsulate the system service modules through the RESTful API. Frontend or other applications can invoke related services through the RESTful API provided by Koa2. 
 Besides, Ethereum blockchain is adopted to implement as VDR infrastructure. The Ethereum client,  Go-Ethereum\cite{geth}, is deployed to play the role of bridging the backend system and blockchain. In addition, Solidity is the smart contract language chose to implement the VC Registry. 
-On the other hand, Alice's device, authorization server, resources, and VC issuer services in the prototype system is divided into four processes implemented in the device with \textit{macOS Monterey 12.0.1} OS, \textit{Apple M1} CPU and 16 GB RAM.
-
-To meet the needs of signature and derive proof for VC, the BBS+ Signature Module\cite{bbsplus_github} provided by MATTR is used, which is designed based on the pairing-friendly curve, \textit{BLS12-381}.
+On the other hand, Alice's device, authorization server, resources, and VC issuer services in the prototype system is divided into four processes implemented in the device with \textit{macOS Monterey 12.0.1} OS, \textit{Apple M1} CPU and 16 GB RAM. To meet the needs of signature and derive proof for VC, the BBS+ Signature Module\cite{bbsplus_github} provided by MATTR is used, which is designed based on the pairing-friendly curve, \textit{BLS12-381}.
 BBS+ Signature module not only provides VC issuer to implement multi-message VC signature but also provides VC wallet to realize the selective disclosure for deriving VC proofs. 
 
 According to the prototype, the operation flow for each entity is listed as follows. First, Alice can provide claim data to the VC issuer to apply for the VC(fig. \ref{fig:applyvc_selectclaim}a). 
@@ -418,7 +422,7 @@ Finally, the permission ticket and the VP are sent to the token endpoint of AS. 
 
 In order to help developers evaluate the appropriate authentication flow and the performance of using blockchain when applying the \textit{VC-UMA}, this paper presents three different experiments listed in Table \ref{table:experiments_list}.
 
-\begin{table}[ht]
+\begin{table}[htbp]
   \begin{center}
   \caption{Experiments for VC-UMA}
   \label{table:experiments_list}
@@ -439,7 +443,7 @@ In order to help developers evaluate the appropriate authentication flow and the
 \subsubsection{Verification Time for Verifiable Presentation}
 According to the results (fig. \ref{fig:new_verification_time}), it can be found that although \textit{Selective Disclosure Signatures} flow takes more time to verify $VP_{SD}$ with $n = 1$, the overall response time does not significantly increase as the increase of $n$. Besides, the verification time of \textit{Atomize Information} flow will increase significantly with the increase of the number of $VP_{AI}$. Therefore, it can be inferred that \textit{Atomize Information} flow can be used when only a few claims need to be verified, and \textit{Selective Disclosure Signatures} flow is more appropriate in cases where VP included many numbers of claims.
 
-\begin{figure}[ht] %浮動式圖形
+\begin{figure}[htbp] %浮動式圖形
   \begin{center} %中央寄せ
   \includegraphics[width=85mm]{images/new_verification_time.png} %[サイズ]{ファイル名.png}
   \caption{Verifiable Presentation Response Time for Each Authentication flow} %キャプション
@@ -451,7 +455,7 @@ According to the results (fig. \ref{fig:new_verification_time}), it can be found
 
 As the experimental results, it can be observed that since the \textit{deploy contract}, \textit{register}, and \textit{revoke} API need to wait for the new block to be mined, a considerable time is taken. On the contrary, since \textit{isRevoked} API, does not need to change the block state, so the response time is relatively fast.
 
-	\begin{table}[ht]
+	\begin{table}[htbp]
 		\begin{center}
 		\caption{The Response Time of Invoking VC Registry API}
 		\label{table:VC_contract_Response_Time}
@@ -485,7 +489,6 @@ Developers can focus on reducing the amount of data size that needs to be stored
 
 \subsubsection{Security}
 When deploying VC-UMA, some attacks may cause the system to face security risks. The following will analyze how VC-UMA can resist against related attacks.
-
 
 \begin{itemize}
   \item \textbf{Spoofing Attack Resistance}\\
@@ -528,7 +531,7 @@ In a nutshell, VC-UMA not only provides an access control mechanism enhancing se
 
 % \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
   \begin{center}
   \caption{Comparison of Access Control Mechanisms in Each Aspect}
   \label{table:Evaluation_table}
